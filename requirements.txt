@@ -1,0 +1,9 @@
+# add project related dependecies here
+
+# following dependecies are needed by manipulator-learning submodule
+pybullet
+numpy<2.0
+liegroups @ git+ssh://git@github.com/utiasSTARS/liegroups@master#egg=liegroups
+gym
+transforms3d
+Pillow
