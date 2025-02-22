@@ -39,3 +39,8 @@ pip install -r requirements.txt
 ```
 
 ## Usage
+
+Run the following command in the top-level directory of the repo:
+```bash
+python examples/run_pybullet_simulation.py
+```
