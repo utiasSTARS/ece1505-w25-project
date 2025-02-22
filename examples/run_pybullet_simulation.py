@@ -12,11 +12,11 @@ def main():
     # more enviornment names can be found here:
     # https://github.com/utiasSTARS/manipulator-learning/tree/master?tab=readme-ov-file#current-environment-list
     env = pyb_env.create_env("PandaPlayInsertTrayXYZState")
-    # env = pybullet_env.create_env("ThingLiftXYZState")
-    # env = pybullet_env.create_env("PandaReachXYZState", render_opengl_gui=False)
+    # env = pyb_env.create_env("ThingLiftXYZState")
+    # env = pyb_env.create_env("PandaReachXYZState", render_opengl_gui=False)
 
     obs = env.reset()
-    for acts in range(10):
+    for acts in range(100):
         next_obs, rew, done, info = env.step(env.action_space.sample())
         env.render()
 
