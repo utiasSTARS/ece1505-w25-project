@@ -32,11 +32,23 @@ To evaluate its effectiveness, we will compare our approach against classical sa
 The proposed method will be implemented and tested in Drake~\cite{drake}, a widely used toolbox for modeling and simulating robotic systems.
 \end{abstract}
 
-\section{Introduction}
+\section{Background}
 
-\section{Related Work}
+Motion planning is a fundamental problem in robotics that involves computing a feasible and efficient trajectory for a robot to move from an initial configuration to a goal configuration while satisfying various constraints\cite{lavalle2006planning}.
+%
+The problem becomes particularly challenging in high dimensional systems, which are generally known to be PSPACE-hard\cite{reif1979complexity}.
 
-\section{Proposed Approach}
+Classical approaches to motion planning rely heavily on sampling-based planners, such as Rapidly-exploring Random Trees (RRT)\cite{lavalle2001randomized} and Probabilistic Roadmaps (PRM)\cite{kavraki1996probabilistic}, due to their ability to efficiently explore high-dimensional spaces.
+%
+These planners have been widely adopted because they can handle complex environments without requiring an explicit representation of the free space.
+%
+However, when additional constraints such as kinodynamic feasibility, obstacle avoidance, or motion continuity are introduced, these methods struggle to produce high-quality, optimal trajectories.
+
+Recent advances in optimization-based motion planning have tackled these limitations by formulating the problem as a compact mixed-integer convex program\cite{marcucci2023motion}.
+%
+One such approach, the Graph of Convex Sets (GCS) framework\cite{marcucci2024shortest}, enables the encoding of collision-avoidance constraints and system dynamics within a single convex optimization formulation.
+%
+By leveraging convex relaxations and mixed-integer programming, GCS provides a structured way to computing globally optimal trajectories while ensuring feasibility in constrained environments.
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,main}
