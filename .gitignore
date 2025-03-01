@@ -12,3 +12,10 @@ dist/
 
 # OS specific
 .DS_Store
+
+# tex related
+*.aux
+*.bbl
+*.blg
+*.log
+*.pdf

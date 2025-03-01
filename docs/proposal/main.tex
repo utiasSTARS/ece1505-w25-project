@@ -1,0 +1,44 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+
+\title{Mixed-Integer Convex Programming for \\Motion Planning in Dual-Arm Manipulation}
+
+\author{\IEEEauthorblockN{Phone Thiha Kyaw and Karyna Volokhatiuk}
+\IEEEauthorblockA{\textit{University of Toronto Institute for Aerospace Studies} \\
+Email: \{phone.thiha, karyna.volokhatiuk\}@robotics.utias.utoronto.ca}
+}
+
+\maketitle
+
+\begin{abstract}
+Motion planning for high-degree-of-freedom robotic manipulators is challenging due to complex constraints such as collision avoidance, kinematic limits, and trajectory smoothness.
+%
+In this project, we propose formulating the motion planning problem for dual-arm manipulation (14-DOF) as a convex optimization problem.
+%
+Specifically, we will leverage the recently studied Graph of Convex Sets (GCS) framework~\cite{marcucci2024shortest} to model motion planning as a compact mixed-integer optimization problem, similar to~\cite{marcucci2023motion}.
+%
+To evaluate its effectiveness, we will compare our approach against classical sampling-based motion planners from OMPL~\cite{sucan2012open}.
+%
+The proposed method will be implemented and tested in Drake~\cite{drake}, a widely used toolbox for modeling and simulating robotic systems.
+\end{abstract}
+
+\section{Introduction}
+
+\section{Related Work}
+
+\section{Proposed Approach}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,main}
+
+\end{document}
