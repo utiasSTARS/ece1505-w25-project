@@ -6,6 +6,13 @@
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
+
+% make sure captions are small font
+\usepackage{subcaption}
+\usepackage{caption}
+\captionsetup{font=small}
+\captionsetup[sub]{font=small}
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -49,6 +56,38 @@ Recent advances in optimization-based motion planning have tackled these limitat
 One such approach, the Graph of Convex Sets (GCS) framework\cite{marcucci2024shortest}, enables the encoding of collision-avoidance constraints and system dynamics within a single convex optimization formulation.
 %
 By leveraging convex relaxations and mixed-integer programming, GCS provides a structured way to computing globally optimal trajectories while ensuring feasibility in constrained environments.
+
+\begin{figure}[!t]
+    \centering
+    \begin{subfigure}[b]{0.23\textwidth}
+        \centering
+        \fbox{\includegraphics[width=\textwidth]{figures/cage_start_orbit.png}}
+        \captionsetup{justification=centering}
+        \caption{Start configuration}
+        \label{subfig:cage_start_orbit}
+    \end{subfigure}\hspace{0.01\textwidth}
+    \begin{subfigure}[b]{0.23\textwidth}
+        \centering
+        \fbox{\includegraphics[width=\textwidth]{figures/cage_goal_orbit.png}}
+        \captionsetup{justification=centering}
+        \caption{Goal configuration}
+        \label{subfig:cage_goal_orbit}
+    \end{subfigure}
+    \caption{A dual-arm manipulation problem for the Barrett WAM Arm in $\mathbb{R}^{14}$, simulated in Drake. Starting with both arms pointing in the same direction (a), they must be moved to extend outward in opposite directions without hitting the cage (b).}
+    \label{fig:simulation}
+\end{figure}
+
+\section{Contributions}
+In this project, we explore the use of the GCS framework for kinodynamic motion planning in dual-arm robotic manipulation.
+%
+Our key contributions include:
+\begin{itemize}
+    \item We formulate the problem of finding \textit{collision-free, kinodynamic motion plans} for a dual-arm manipulator as a mixed-integer convex program, similar to~\cite{marcucci2023motion}.
+    %
+    Unlike prior work, our study considers the scalability of the framework in significantly higher-dimensional systems---14 degrees of freedom in this case (Figure~\ref{fig:simulation}).
+    %
+    \item We extensively evaluate our optimization-based approach against classical sampling-based motion planners from the Open Motion Planning Library (OMPL)~\cite{sucan2012open}, analyzing key performance metrics such as computation time, solution quality, and success rate.
+\end{itemize}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,main}
