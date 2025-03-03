@@ -1,1 +1,4 @@
 # project related dependecies here
+numpy==1.26.4
+drake==1.38.0
+absl-py==2.1.0

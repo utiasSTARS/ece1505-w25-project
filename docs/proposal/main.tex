@@ -59,21 +59,21 @@ By leveraging convex relaxations and mixed-integer programming, GCS provides a s
 
 \begin{figure}[!t]
     \centering
-    \begin{subfigure}[b]{0.23\textwidth}
+    \begin{subfigure}[b]{0.19\textwidth}
         \centering
         \fbox{\includegraphics[width=\textwidth]{figures/cage_start_orbit.png}}
         \captionsetup{justification=centering}
         \caption{Start configuration}
         \label{subfig:cage_start_orbit}
     \end{subfigure}\hspace{0.01\textwidth}
-    \begin{subfigure}[b]{0.23\textwidth}
+    \begin{subfigure}[b]{0.19\textwidth}
         \centering
         \fbox{\includegraphics[width=\textwidth]{figures/cage_goal_orbit.png}}
         \captionsetup{justification=centering}
         \caption{Goal configuration}
         \label{subfig:cage_goal_orbit}
     \end{subfigure}
-    \caption{A dual-arm manipulation problem for the Barrett WAM Arm in $\mathbb{R}^{14}$, simulated in Drake. Starting with both arms pointing in the same direction (a), they must be moved to extend outward in opposite directions without hitting the cage (b).}
+    \caption{A dual-arm manipulation problem for two Franka Emika Panda robots in $\mathbb{R}^{14}$, simulated in Drake. The robots start in an initial configuration (a) positioned between the first two rows of obstacles and must reach the goal configuration (b) between the last two rows of obstacles without collisions.}
     \label{fig:simulation}
 \end{figure}
 

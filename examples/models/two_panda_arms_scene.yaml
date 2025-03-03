@@ -1,0 +1,84 @@
+directives:
+
+# Robot arms
+- add_model:
+    name: left_arm
+    file: package://drake_models/franka_description/urdf/panda_arm_hand.urdf
+- add_weld:
+    parent: world
+    child: left_arm::panda_link0
+    X_PC:
+      translation: [0.0, -0.2, 0.0]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: right_arm
+    file: package://drake_models/franka_description/urdf/panda_arm_hand.urdf
+- add_weld:
+    parent: world
+    child: right_arm::panda_link0
+    X_PC:
+      translation: [0.0, 0.2, 0.0]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+
+# Obstacles
+- add_model:
+    name: obstacle1_left
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle1_left::base
+    X_PC:
+      translation: [0.0, -0.5, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: obstacle1_right
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle1_right::base
+    X_PC:
+      translation: [0.0, 0.5, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: obstacle2_left
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle2_left::base
+    X_PC:
+      translation: [0.35, -0.35, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: obstacle2_right
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle2_right::base
+    X_PC:
+      translation: [0.35, 0.35, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: obstacle3_left
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle3_left::base
+    X_PC:
+      translation: [0.6, -0.15, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+- add_model:
+    name: obstacle3_right
+    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+- add_weld:
+    parent: world
+    child: obstacle3_right::base
+    X_PC:
+      translation: [0.6, 0.15, 0.25]
+      rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
