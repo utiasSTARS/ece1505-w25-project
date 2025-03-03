@@ -9,6 +9,7 @@ build/
 dist/
 *.egg
 *.log
+.idea/
 
 # OS specific
 .DS_Store
