@@ -19,19 +19,12 @@ git submodule update
 
 It is highly recommended to use a virtual environment to isolate project dependencies:
 
-> Only Python 3.8 is supported at the moment. There are some issues in manipulator-learning submodule that we need to fix before allowing the use of newer Python versions.
-
 ```bash
-python3.8 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 ```
 
 **Install Dependencies:**
-
-Tkinter module for PyBullet GUI:
-```bash
-sudo apt install python3.8-tk
-```
 
 Main python dependencies:
 ```bash
@@ -40,7 +33,4 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the following command in the top-level directory of the repo:
-```bash
-python examples/run_pybullet_simulation.py
-```
+[//]: # (Run the following command in the top-level directory of the repo:)
