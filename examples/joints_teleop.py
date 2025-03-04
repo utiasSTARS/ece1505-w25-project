@@ -28,6 +28,7 @@ def main(_):
 
     plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=1e-4)
     parser = Parser(plant)
+    parser.package_map().AddPackageXml("./examples/models/package.xml")
     directives = LoadModelDirectives("./examples/models/two_panda_arms_scene.yaml")
     models = ProcessModelDirectives(directives, plant, parser)
     plant.Finalize()

@@ -25,7 +25,7 @@ directives:
 # Obstacles
 - add_model:
     name: obstacle1_left
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle1_left::base
@@ -35,7 +35,7 @@ directives:
 
 - add_model:
     name: obstacle1_right
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle1_right::base
@@ -45,7 +45,7 @@ directives:
 
 - add_model:
     name: obstacle2_left
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle2_left::base
@@ -55,7 +55,7 @@ directives:
 
 - add_model:
     name: obstacle2_right
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle2_right::base
@@ -65,7 +65,7 @@ directives:
 
 - add_model:
     name: obstacle3_left
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle3_left::base
@@ -75,7 +75,7 @@ directives:
 
 - add_model:
     name: obstacle3_right
-    file: file:///home/karyna/PycharmProjects/test_pydrake_project/ltl_gcs/examples/models/obstacle.sdf
+    file: package://our_models/obstacle.sdf
 - add_weld:
     parent: world
     child: obstacle3_right::base
