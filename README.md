@@ -42,6 +42,11 @@ Once downloaded, install the wheel using `pip`:
 pip install <wheel-file>.whl
 ```
 
+Note:
+
+If you set up OMPL as described above, you can use most of the planners available in the upstream OMPL repository. However, our benchmarking script also uses [Greedy RRT*](https://arxiv.org/abs/2405.03411v2), a variant of RRTConnect that can find solutions as quickly as RRTConnect but with anytime properties. To use this planner, you need to use [my OMPL fork](https://github.com/mlsdpk/ompl/tree/greedyrrtstar) and build OMPL and its bindings from source.
+
+
 ## Usage
 
 Run the following command in the top-level directory of the repo:
@@ -60,3 +65,5 @@ python examples/drake_ompl_planning/main.py
 ```
 
 This should move the arms from an initial configuration to a goal configuration using the RRTConnect planner.
+
+### Benchmarking OMPL Planners
