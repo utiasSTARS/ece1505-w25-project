@@ -5,7 +5,7 @@ from ompl import geometric as og
 
 from pydrake.all import MultibodyPlant
 
-from collision_checking import CollisionChecker
+from .collision_checking import CollisionChecker
 
 
 class OMPLPlanner:
@@ -54,6 +54,7 @@ class OMPLPlanner:
     ):
         ## create ProblemDefinition.
         self.pdef = ob.ProblemDefinition(self.si)
+        self.pdef.setOptimizationObjective(ob.PathLengthOptimizationObjective(self.si))
 
         # Set start and goal states.
         start_state = ob.State(self.space)

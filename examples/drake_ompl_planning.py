@@ -2,10 +2,13 @@ import numpy as np
 import time
 
 from ompl import geometric as og
+from ompl import tools as ot
 
-from collision_checking import CollisionChecker
-from motion_planner import OMPLPlanner
-from setup_scene import create_drake_scene
+from pydrake.all import PiecewisePolynomial
+
+from drake_ompl.collision_checking import CollisionChecker
+from drake_ompl.motion_planner import OMPLPlanner
+from drake_ompl.setup_scene import create_drake_scene
 
 
 def main():
@@ -46,14 +49,33 @@ def main():
     planner.setup(start_q, goal_q, planner_type=og.RRTConnect)
     solution = planner.plan(planning_time=10.0)
 
+    # compute solution cost
+    total_length = 0
+    for i in range(len(solution) - 1):
+        total_length += np.sum((np.array(solution[i]) - np.array(solution[i + 1])) ** 2)
+    print(f"Solution cost: {total_length}")
+
     # if solution found
     if solution:
         print(f"Found solution of length: {len(solution)}")
         if visualize:
-            for q in solution:
-                plant.SetPositions(plant_context, q)
+
+            total_time = 10
+            times = np.linspace(0, total_time, len(solution))
+            trajectory = PiecewisePolynomial.FirstOrderHold(times, np.array(solution).T)
+
+            start_time = time.time()
+            while True:
+                current_time = time.time() - start_time
+                if current_time > total_time:
+                    break
+
+                desired_q = trajectory.value(current_time).flatten()
+                plant.SetPositions(plant_context, desired_q)
                 diagram.ForcedPublish(diagram_context)
-                time.sleep(0.1)  # playback speed
+
+                # simulation step
+                time.sleep(0.01)
 
     if visualize:
         print("Press Enter to exit.")

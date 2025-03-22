@@ -61,9 +61,47 @@ in the top-right corner to open the joint control sliders.
 ### Running Drake + OMPL demo
 Run the following command in the top-level directory of the repository:
 ```bash
-python examples/drake_ompl_planning/main.py
+python examples/drake_ompl_planning.py
 ```
 
 This should move the arms from an initial configuration to a goal configuration using the RRTConnect planner.
 
 ### Benchmarking OMPL Planners
+
+You can run the following script to benchmark the performance of OMPL planners:
+```bash
+python examples/drake_ompl_benchmarking.py
+```
+
+Adjust the following configurations as needed:
+```py
+###############################
+# Benchmarking Configurations #
+###############################
+
+PLANNERS = [
+    "RRT",
+    "EST",
+    "RRTConnect",
+    "RRTstar",
+    "PRMstar",
+    "FMTstar",
+    "InformedRRTstar",
+    "BITstar",
+    # "GreedyRRTstar",
+]
+
+RUNTIME_LIMIT = 10
+MEMORY_LIMIT = 4096
+RUN_COUNT = 10
+```
+
+This script will generate several files under the benchmarks folder of the project, organized by timestamp. You can use the `.db` file to analyze the results using [Planner Arena](http://plannerarena.org/). More information about the database format and log files can be found [here](https://ompl.kavrakilab.org/benchmark.html). You can also run Planner Arena locally - instructions can be found [here](https://ompl.kavrakilab.org/plannerarena.html).
+
+#### Precompute and Reuse Roadmaps
+
+This feature is not well-documented or widely promoted in OMPL, so not many people are aware of it. Here's a brief explanation of how it works, along with some examples of how to achieve it.
+
+TODO (Phone): update this section with more details.
+
+Another related topic is Experience-based Planning. OMPL has older [Thunder](https://ompl.kavrakilab.org/classompl_1_1tools_1_1Thunder.html) and [Lightning](https://ompl.kavrakilab.org/classompl_1_1tools_1_1Lightning.html) frameworks, which use retrieve-and-repair paradigms. We are not using it in this project, so I won’t cover it here — but will come back at some point.
