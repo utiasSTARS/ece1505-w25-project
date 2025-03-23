@@ -1,0 +1,19 @@
+\section{Simulation Results}\label{sec:results}
+
+We compare our convex optimization-based approach against various sampling-based motion planners from the Open Motion Planning Library (OMPL)\cite{sucan2012open}.
+Figure~\ref{fig:simulation} illustrates our dual-arm manipulation problem set up in Drake, where both arms operate in a cluttered environment.
+We also use Drake's implementations of GCS framework and IRIS to perform convex decompositions.
+MOSEK is used to solve our convex problems.
+Because we perform a convex decomposition of the workspace prior to online planning, we separate our experiments into two parts to ensure fair comparisons.
+
+\subsection{Comparison with Multi-Query Planners}
+
+In this experiment, we compare our approach with multi-query sampling-based planners under conditions where precomputation is allowed.
+These planners, such as PRM~\cite{kavraki1996probabilistic} (and its lazy variants~\cite{bohlin2000path}) and Sparse Roadmap Spanners (SPARS)~\cite{dobson2014sparse}, precompute a roadmap (graph) before planning to speed up the solution search.
+We measure metrics such as the time required to find a solution (excluding precomputation), solution quality, and success rate.
+
+\subsection{Comparison with Anytime Planners}
+
+We also compare our approach against anytime planners, which can asymptotically improve solution quality over time.
+Specifically, we consider RRT-Connect~\cite{kuffner2000rrt}, BIT*\cite{gammell2020batch}, AIT*\cite{strub2020adaptively}, and Greedy RRT*~\cite{kyaw2024greedy}.
+Here, we focus on how quickly each method finds a solution of comparable quality to ours, as well as its success rate.
