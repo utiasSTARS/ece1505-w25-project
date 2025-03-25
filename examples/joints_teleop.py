@@ -81,18 +81,28 @@ def main(_):
     plant_context = plant.GetMyMutableContextFromRoot(context)
 
     if FLAGS.initial_conf == "zeros":
-        q0 = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0,
-                       0, 0, 0, 0, 0, 0, 0, 0, 0])
+        q0 = np.array([0, 0, 0, 0, 0, 0, 0, 0.02, 0.02,
+                       0, 0, 0, 0, 0, 0, 0, 0.02, 0.02])
     elif FLAGS.initial_conf == "start":
         # robot arms are between the first and second rows of obstacles
         # (if we count starting from the closest ones to the robot)
-        q0 = np.array([-1.02, 1.76,  0.86, -0.07, 0.00, 3.75, 2.89,  0.00, 0.00,
-                        1.02, 1.76, -0.86, -0.07, 0.00, 3.75, 2.05, 0.00, 0.00])
+        q0 = np.array([-1.09, 1.76,  0.86, -0.07, 0.00, 3.75, 2.89,  0.02, 0.02,
+                        1.09, 1.76, -0.86, -0.07, 0.00, 3.75, 2.05, 0.02, 0.02])
+        # q0 = np.array([-1.09, 1.76,  1.55, -0.07, 0.00, 3.75, 2.89,  0.02, 0.02])
     elif FLAGS.initial_conf == "goal":
         # robot arms are between the second and third rows of obstacles
         # (if we count starting from the closest ones to the robot)
-        q0 = np.array([ 0.20, 1.70, -1.45, -0.87, 0.00, 1.40, 0.00,  0.00, 0.00,
-                       -0.20, 1.70,  1.45, -0.87, 0.00, 1.40, 1.30,  0.00, 0.00])
+        q0 = np.array([ 0.20, 1.70, -1.45, -0.87, 0.00, 1.40, 0.00,  0.02, 0.02,
+                       -0.20, 1.70,  1.45, -0.87, 0.00, 1.40, 1.30,  0.02, 0.02])
+    elif FLAGS.initial_conf == "home":
+        q0 = np.array([0, -0.785, 0, -2.35, 0, 1.57, np.pi / 4, 0.02, 0.02,
+                       0, -0.785, 0, -2.35, 0, 1.57, np.pi / 4, 0.02, 0.02])
+    elif FLAGS.initial_conf == "start_home":
+        q0 = np.array([-1.09, 0.11, 1.07, -0.0698, -1.48, 3.7525, 2.8973, 0.02, 0.02,
+                       -1.09, 0.11, 1.07, -0.0698, -1.48, 3.7525, 2.8973, 0.02, 0.02])
+    elif FLAGS.initial_conf == "goal_home":
+        q0 = np.array([ 0.23, 1.54, -1.91, -1.15, 2.06, 3.7525, 2.8973, 0.02, 0.02,
+                       -0.20, 1.2, 1.41, -0.95, 1.24, -2.8973, -1.29, 0.02, 0.02])
     else:
         print("Error: Initial conf not recognized")
         return

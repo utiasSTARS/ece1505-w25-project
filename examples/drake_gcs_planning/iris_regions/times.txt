@@ -1,0 +1,29 @@
+Seed: q_goal_term_1_1_170       Time: 4.6627 minutes.   Faces 96
+Seed: q_goal_term_1_1_125       Time: 5.899 minutes.    Faces 96
+Seed: q_goal_term_1_1_100       Time: 11.173 minutes.   Faces 196
+
+Seed: q_start_term_1_1_176      Time: 5.6363 minutes.   Faces 83
+Seed: q_start_term_1_1_125      Time: 9.3847 minutes.   Faces 423
+Seed: q_start_term_1_1_100      Time: 8.5537 minutes.   Faces 408
+#Seed: q_start_term_1_1_000      Time: 16.5694 minutes.  Faces 299
+
+Seed: q_home_term_1_1   Time: 13.54 minutes.    Faces 333
+Seed: q_home_term_1_1_min_200   Time: 40.6954 minutes.  Faces 568
+
+
+
+Seed: q_home_goal_term_1_1_j4   Time: 43.2499 minutes.  Faces 634
+Seed: q_home_goal_term_1_1_j6   Time: 46.0128 minutes.  Faces 655
+Seed: q_home_goal_term_1_1_j7   Time: 46.0462 minutes.  Faces 666
+Seed: q_home_goal_term_1_1_j1   Time: 75.3741 minutes.  Faces 886
+#3
+Seed: q_home_goal_term_1_1_j2   Time: 5.9736 minutes.   Faces 96
+
+
+
+Seed: q_home_start_term_1_1_j4  Time: 35.0154 minutes.  Faces 595
+Seed: q_home_start_term_1_1_j6  Time: 29.9538 minutes.  Faces 509
+Seed: q_home_start_term_1_1_j7  Time: 34.8125 minutes.  Faces 544
+Seed: q_home_start_term_1_1_j3  Time: 26.6966 minutes.  Faces 413
+Seed: q_home_start_term_1_1_j2_half     Time: 25.4989 minutes.  Faces 419
+Seed: q_home_start_term_1_1_j1  Time: 52.3313 minutes.  Faces 917
