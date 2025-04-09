@@ -1,3 +1,11 @@
+\begin{figure*}[!tbh]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/optimality_gap.png}
+    \captionsetup{justification=centering}
+    \caption{ {\color{red} todo: replace with real figure after running experiments} }
+    \label{fig:}
+\end{figure*}
+
 \section{Simulation Results}\label{sec:results}
 
 \subsection{Implementation details}
@@ -17,7 +25,30 @@ In addition to our approach, we use sampling-based motion planners from the Open
 All parameters related to these sampling-based planners were carefully reviewed and adjusted only as necessary to ensure a fair comparison; detailed configurations are omitted from this report.
 Interested readers can find more information in our publicly available repository\footnote{\url{https://github.com/utiasSTARS/ece1505-w25-project}}.{\color{red}we should probably move this repo to our own}
 
+\subsection{Analysis}
+GCS analysis here
+
 \subsection{Comparison with multi-query planners}
+
+\begin{figure}[!t]
+    \centering
+    \begin{subfigure}[b]{\linewidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/solution_length_boxplot.pdf}
+        \captionsetup{justification=centering}
+        % \caption{}
+        \label{subfig:}
+    \end{subfigure}
+    \begin{subfigure}[b]{\linewidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{figures/time_boxplot.pdf}
+        \captionsetup{justification=centering}
+        % \caption{}
+        \label{subfig:}
+    \end{subfigure}
+    \caption{ {\color{red} todo: update with correct data} }
+    \label{fig:}
+\end{figure}
 
 % In this experiment, we compare our approach with multi-query sampling-based planners under conditions where precomputation is allowed.
 % These planners, such as PRM~\cite{kavraki1996probabilistic} (and its lazy variants~\cite{bohlin2000path}) and Sparse Roadmap Spanners (SPARS)~\cite{dobson2014sparse}, precompute a roadmap (graph) before planning to speed up the solution search.
@@ -28,3 +59,5 @@ Interested readers can find more information in our publicly available repositor
 % We also compare our approach against anytime planners, which can asymptotically improve solution quality over time.
 % Specifically, we consider RRT-Connect~\cite{kuffner2000rrt}, BIT*\cite{gammell2020batch}, AIT*\cite{strub2020adaptively}, and Greedy RRT*~\cite{kyaw2024greedy}.
 % Here, we focus on how quickly each method finds a solution of comparable quality to ours, as well as its success rate.
+
+
