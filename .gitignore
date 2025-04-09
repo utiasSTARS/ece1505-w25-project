@@ -21,3 +21,6 @@ dist/
 *.log
 *.pdf
 *.gz
+
+# misc
+benchmarks/
