@@ -82,3 +82,19 @@ directives:
     X_PC:
       translation: [0.6, 0.15, 0.25]
       rotation: !Rpy { deg: [0.0, 0.0, 0.0] }
+
+# Add table
+- add_model:
+    name: table
+    file: package://our_models/table_wide.sdf
+
+- add_frame:
+    name: table_origin
+    X_PF:
+      base_frame: world
+      translation: [0.25, 0.0, 0.0]
+      rotation: !Rpy { deg: [0., 0., 00]}
+
+- add_weld:
+    parent: table_origin
+    child: table::table_body
