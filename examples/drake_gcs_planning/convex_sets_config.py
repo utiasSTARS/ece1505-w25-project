@@ -42,9 +42,9 @@ def get_configurations():
     # "q_home_goal_term_1_1_j3":
     #     np.array([0.20, -0.785, -1.45, -0.87, 0, 1.40, 0.00, 0.02, 0.02,
     #               -0.20, -0.785, 1.45, -0.87, 0, 1.40, 1.30, 0.02, 0.02]),
-    "q_home_goal_term_1_1_j2": #is not needed, because duplicate of goal
-        np.array([0.20, 1.70, -1.45, -0.87, 0, 1.40, 0.00, 0.02, 0.02,
-                  -0.20, 1.70, 1.45, -0.87, 0, 1.40, 1.30, 0.02, 0.02]),
+    # "q_home_goal_term_1_1_j2": #is not needed, because duplicate of goal
+    #     np.array([0.20, 1.70, -1.45, -0.87, 0, 1.40, 0.00, 0.02, 0.02,
+    #               -0.20, 1.70, 1.45, -0.87, 0, 1.40, 1.30, 0.02, 0.02]),
     "q_home_start_term_1_1_j4":
         np.array([0, -0.785, 0, -0.07, 0, 1.57, np.pi / 4, 0.02, 0.02,
                   0, -0.785, 0, -0.07, 0, 1.57, np.pi / 4, 0.02, 0.02]),
@@ -117,3 +117,19 @@ def get_minimum_graph_nodes():
             "start_term_176",
             "q_home_start_term_1_1_j6",
             "q_home_start_term_1_1_j1"]
+
+# 12 vertices for the medium-size graph
+# def get_minimum_graph_nodes():
+#     return ["goal_term_170",
+#             "goal_term_125",
+#             "goal_term_100",
+#             "start_term_176",
+#             "q_home_start_term_1_1_j6",
+#             "q_home_start_term_1_1_j1",
+#             "home_term_1_1_min_200",
+#             "q_home_start_term_1_1_j2_half",
+#             "q_home_goal_term_1_1_j7",
+#             "start_term_100",
+#             "q_home_goal_term_1_1_j6",
+#             "q_home_goal_term_1_1_j1"]
+
