@@ -1,6 +1,7 @@
 import numpy as np
 import os
-import subprocess
+import pickle
+import time
 from datetime import datetime
 
 from ompl import base as ob
@@ -11,72 +12,52 @@ from ompl import util as ou
 from drake_ompl.setup_scene import create_drake_scene
 from drake_ompl.collision_checking import CollisionChecker
 
+# todo: move these configs out from gcs folder
+from drake_gcs_planning.convex_sets_config import get_configurations
+
+# this file directory
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 ###############################
 # Benchmarking Configurations #
 ###############################
 
 PLANNERS = [
-    "RRT",
-    "EST",
-    "RRTConnect",
-    "RRTstar",
-    "PRMstar",
-    "FMTstar",
-    "InformedRRTstar",
-    "BITstar",
-    # "GreedyRRTstar",
+    "PRM",  # only PRM is supported at the moment
 ]
 
-RUNTIME_LIMIT = 10
-MEMORY_LIMIT = 4096
-RUN_COUNT = 10
+# this serves as a timeout value
+# planning will stop as soon as it found an initial solution
+RUNTIME_LIMIT = 3
+
+RUN_COUNT = 1
+SHORTCUTTING = False
+PRECOMPUTE = True
+PRECOMPUTATION_TIME = 10
+
+# this is used when PRECOMPUTE is set to False
+
+STORAGE_PATHS = {
+    "PRM": os.path.join(
+        CURRENT_DIR, "../data/PRM-600s.graph"
+    ),  # 600s precomputed roadmap
+}
 
 #################################
 # Start and Goal configurations #
 #################################
 
 # fmt: off
-START_Q = np.array([-1.02, 1.76,  0.86, -0.07, 0.00, 3.75, 2.89, 0.0, 0.0,
-                    1.02, 1.76, -0.86, -0.07, 0.00, 3.75, 2.05, 0.0, 0.0])
+START_Q = np.array([-1.09, 1.76,  0.86, -0.07, 0.00, 3.75, 2.89,  0.02, 0.02,
+                     1.09, 1.76, -0.86, -0.07, 0.00, 3.75, 2.05, 0.02, 0.02])
 
-GOAL_Q = np.array([ 0.20, 1.70, -1.45, -0.87, 0.00, 1.40, 0.00, 0.0, 0.0,
-                    -0.20, 1.70,  1.45, -0.87, 0.00, 1.40, 1.30, 0.0, 0.0])
+GOAL_Q = np.array([ 0.20, 1.70, -1.45, -0.87, 0.00, 1.40, 0.00, 0.04, 0.04,
+                   -0.20, 1.70, 1.45, -0.87, 0.00, 1.40, 1.30, 0.04, 0.04])
 # fmt: on
 
 #############################################################################
 
 # DO NOT CHANGE ANYTHING BELOW
-
-
-def allocatePlanner(si, plannerType):
-    if plannerType.lower() == "rrt":
-        return og.RRT(si)
-    elif plannerType.lower() == "est":
-        return og.EST(si)
-    elif plannerType.lower() == "rrtconnect":
-        return og.RRTConnect(si)
-    elif plannerType.lower() == "rrtstar":
-        return og.RRTstar(si)
-    elif plannerType.lower() == "prmstar":
-        return og.PRMstar(si)
-    elif plannerType.lower() == "fmtstar":
-        return og.FMT(si)
-    elif plannerType.lower() == "informedrrtstar":
-        return og.InformedRRTstar(si)
-    elif plannerType.lower() == "bitstar":
-        return og.BITstar(si)
-    elif plannerType.lower() == "greedyrrtstar":
-        return og.GreedyRRTstar(si)
-    else:
-        ou.OMPL_ERROR("Planner-type is not implemented in allocation function.")
-
-
-def create_planners(ss, planner_names):
-    planners = []
-    si = ss.getSpaceInformation()
-    for name in planner_names:
-        planners.append(allocatePlanner(si, name))
-    return planners
 
 
 class ValidityChecker(ob.StateValidityChecker):
@@ -90,27 +71,168 @@ class ValidityChecker(ob.StateValidityChecker):
         return self.collision_checker.is_valid(q)
 
 
+def allocate_planner(si, planner_id):
+    if planner_id.lower() == "prm":
+        return og.PRM(si)
+    else:
+        ou.OMPL_ERROR("Planner ID is not implemented in allocate_planner function.")
+
+
+def allocate_persistent_planner(data, planner_id):
+    if planner_id.lower() == "prm":
+        return og.PRM(data)
+    elif planner_id.lower() == "lazyprm":
+        return og.LazyPRM(data)
+    # TODO: SPARS and SPARS2 work differently for reusing data
+    else:
+        ou.OMPL_ERROR(
+            "Planner ID is not implemented in allocate_persistent_planner function."
+        )
+
+
+def planner_allocator_impl(si, planner_id, storage_path=None, data=None):
+    planner = None
+
+    # we load the precomputed data into planner from storage path
+    if storage_path is not None:
+        data = ob.PlannerData(si)
+        storage = ob.PlannerDataStorage()
+        storage.load(storage_path, data)
+        print(
+            f"Loading planner data. NumEdges: {data.numEdges()}, NumVertices: {data.numVertices()}"
+        )
+        planner = allocate_persistent_planner(data, planner_id)
+    # if data is already given, we load that too
+    elif data is not None:
+        print(
+            f"Loading planner data. NumEdges: {data.numEdges()}, NumVertices: {data.numVertices()}"
+        )
+        planner = allocate_persistent_planner(data, planner_id)
+    else:
+        planner = allocate_planner(si, planner_id)
+
+    return planner
+
+
+def generate_fixed_configurations(space):
+    for q in get_configurations().values():
+        # remember to use "space.allocState()" instead of "state = ob.State(space)"
+        # this will create new state object, the other will one reuse the same object pointer so it wont work
+        state = space.allocState()
+        for i in range(len(q)):
+            state[i] = q[i]
+        yield state
+
+
 def benchmark_planners(
     ss,
+    start_state,
+    goal_state,
     planners,
+    storage_paths,
     runtime_limit=10,
-    memory_limit=4096,
     run_count=5,
-    log_file="",
+    data_file_path="",
 ):
     """
     Runs the benchmark on the given planners and saves the results.
     """
-    request = ot.Benchmark.Request(runtime_limit, memory_limit, run_count)
-    benchmark = ot.Benchmark(ss, "Benchmarking OMPL Planners")
-    for planner in planners:
-        benchmark.addPlanner(planner)
-    benchmark.benchmark(request)
-    benchmark.saveResultsToFile(log_file)
-    print(f"Benchmark results saved to {log_file}")
+    execution_times = []
+    solution_costs = []
+    solutions = []
+
+    for planner_id in planners:
+        run_id = 0
+        while run_id < run_count:
+
+            planner = planner_allocator_impl(
+                ss.getSpaceInformation(),
+                planner_id,
+                storage_paths.get(planner_id, None),
+            )
+
+            ## setup planner
+            pdef = ob.ProblemDefinition(ss.getSpaceInformation())
+
+            ## path length optimizing objective
+            if planner_id != "PRM":  ## dont set this for PRM
+                pdef.setOptimizationObjective(
+                    ob.PathLengthOptimizationObjective(ss.getSpaceInformation())
+                )
+
+            pdef.setStartAndGoalStates(start_state, goal_state)
+            planner.setProblemDefinition(pdef)
+            planner.setup()
+
+            ## termination condition
+            ## 1) this condition will terminate the planning as soon as planner founds the exact solution
+            ptc1 = ob.exactSolnPlannerTerminationCondition(pdef)
+            ## 2) this condition will terminate the planning upon timeout
+            ptc2 = ob.timedPlannerTerminationCondition(runtime_limit)
+            ## either one of the conditions needs to satisfy
+            ptc = ob.plannerOrTerminationCondition(ptc1, ptc2)
+
+            ## solve the planning problem
+            start_time = time.time()
+            solved = planner.solve(ptc)
+            execution_times.append(time.time() - start_time)
+
+            solution = []
+            if solved:
+                path = pdef.getSolutionPath()
+
+                # perform shortcutting based on RRT-Rope approach
+                if SHORTCUTTING:
+                    path_simplifier = og.PathSimplifier(ss.getSpaceInformation())
+                    start_time = time.time()
+                    path_simplifier.ropeShortcutPath(path)
+                    shortcutting_time = time.time() - start_time
+                    execution_times[-1] += shortcutting_time
+
+                ndim = ss.getSpaceInformation().getStateDimension()
+                for i in range(path.getStateCount()):
+                    state = path.getState(i)
+                    configuration = [state[j] for j in range(ndim)]
+                    solution.append(configuration)
+
+                # compute solution cost
+                total_length = 0
+                for i in range(len(solution) - 1):
+                    total_length += np.linalg.norm(
+                        np.array(solution[i]) - np.array(solution[i + 1])
+                    )
+                solution_costs.append(total_length)
+                solutions.append(solution)
+            else:
+                solution_costs.append(float("inf"))
+                solutions.append(None)
+            run_id += 1
+
+    saved_data = {
+        "solution": solutions[0],
+        "solution_length": solution_costs,
+        "time": execution_times,
+    }
+    with open(data_file_path, "wb") as f:
+        pickle.dump(saved_data, f)
+    print(f"Benchmark results saved to {data_file_path}")
 
 
 def main():
+
+    # Run benchmarking
+
+    # benchmark directory in top-level directory of project
+    benchmarks_dir = os.path.join(os.path.dirname(CURRENT_DIR), "benchmarks")
+    os.makedirs(benchmarks_dir, exist_ok=True)
+
+    # current benchmark directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp_dir = os.path.join(benchmarks_dir, timestamp)
+    os.makedirs(timestamp_dir, exist_ok=True)
+
+    # paths to benchmark database
+    data_file_path = os.path.join(timestamp_dir, "benchmark.pkl")
 
     ## Drake setup
     (
@@ -162,45 +284,78 @@ def main():
         goal_state[i] = GOAL_Q[i]
     ss.setStartAndGoalStates(start_state, goal_state)
 
-    # Run benchmarking
+    pdef = ob.ProblemDefinition(ss.getSpaceInformation())
+    # careful with setting pdef here (PRM wont work with this especially for ptc)
+    pdef.setOptimizationObjective(
+        ob.PathLengthOptimizationObjective(ss.getSpaceInformation())
+    )
+    pdef.setStartAndGoalStates(start_state, goal_state)
 
-    # this file directory
-    current_dir = os.path.dirname(os.path.abspath(__file__))
+    # Perform pre-computation of roadmaps if specified
+    storage_paths = {}
+    if PRECOMPUTE:
+        # only consider roadmap based ones
+        planners_to_precompute = []
+        for planner_id in PLANNERS:
+            # for roadmap based ones, we also include pre-specified
+            # robot configurations used during GCS
+            data = ob.PlannerData(ss.getSpaceInformation())
+            for q in generate_fixed_configurations(ss.getSpaceInformation()):
+                v = ob.PlannerDataVertex(q)
+                data.addVertex(v)
+            planners_to_precompute.append(
+                (
+                    planner_id,
+                    planner_allocator_impl(
+                        ss.getSpaceInformation(),
+                        planner_id,
+                        storage_path=None,
+                        data=data,
+                    ),
+                )
+            )
 
-    # benchmark directory in top-level directory of project
-    benchmarks_dir = os.path.join(os.path.dirname(current_dir), "benchmarks")
-    os.makedirs(benchmarks_dir, exist_ok=True)
+        # execute precomputation of roadmaps
+        print(
+            "Performing precomputation of roadmaps. This will take some time to complete..."
+        )
+        for planner_id, planner in planners_to_precompute:
 
-    # current benchmark directory
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    timestamp_dir = os.path.join(benchmarks_dir, timestamp)
-    os.makedirs(timestamp_dir, exist_ok=True)
+            ## setup planner
+            planner.setProblemDefinition(pdef)
+            planner.setup()
 
-    # paths to benchmark log file and database
-    log_file_path = os.path.join(timestamp_dir, "benchmark.log")
-    db_file_path = os.path.join(timestamp_dir, "benchmark.db")
+            ## run the planner
+            ## here we directly provide time to the solve() call without using any ptc
+            ## this will run this planner until timeout
+            planner.solve(PRECOMPUTATION_TIME)
 
-    planners = create_planners(ss, PLANNERS)
+            # store the roadmap
+            data = ob.PlannerData(ss.getSpaceInformation())
+            planner.getPlannerData(data)
+            print(
+                f"Storing precomputed planner data. NumEdges: {data.numEdges()}, NumVertices: {data.numVertices()}"
+            )
+            storage_path = os.path.join(timestamp_dir, f"{planner_id}.graph")
+            storage = ob.PlannerDataStorage()
+            storage.store(data, storage_path)
+            storage_paths[planner_id] = storage_path
+            print(f"Precomputed roadmap graph saved at {storage_path}")
+    else:
+        storage_paths = STORAGE_PATHS
+
+    ## benchmarking stuffs below
+
     benchmark_planners(
         ss,
-        planners,
+        start_state,
+        goal_state,
+        PLANNERS,
+        storage_paths=storage_paths,
         runtime_limit=RUNTIME_LIMIT,
-        memory_limit=MEMORY_LIMIT,
         run_count=RUN_COUNT,
-        log_file=log_file_path,
+        data_file_path=data_file_path,
     )
-
-    # convert the log file into db
-
-    # ompl_benchmark_statistics.py script
-    statistics_script = os.path.join(
-        current_dir, "drake_ompl", "ompl_benchmark_statistics.py"
-    )
-
-    # python ompl_benchmark_statistics.py benchmark_ompl.log -d benchmark_ompl.db
-    command = ["python", statistics_script, log_file_path, "-d", db_file_path]
-    print("Executing:", " ".join(command))
-    subprocess.run(command, capture_output=True, text=True)
 
 
 if __name__ == "__main__":
