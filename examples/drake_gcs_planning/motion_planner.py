@@ -1,3 +1,4 @@
+import numpy as np
 from pydrake.all import MultibodyPlant
 from pydrake.multibody.parsing import Parser, LoadModelDirectives, ProcessModelDirectives
 from pydrake.multibody.plant import AddMultibodyPlantSceneGraph
@@ -15,6 +16,7 @@ CONFIG_PATH = "./examples/drake_gcs_planning/config.ini"
 
 from visualization import make_traj, visualize_trajectory
 import time
+import os.path
 
 class GCSPlanner:
     def __init__(self, plant: MultibodyPlant):
@@ -52,7 +54,8 @@ class GCSPlanner:
 
         # other rounding strategies:
         # https://github.com/mpetersen94/gcs/blob/bdfe94f9233eeb5a425ebd3194a5915fa0570c39/gcs/rounding.py#L71
-        self.gcs.setRoundingStrategy(randomForwardPathSearch, max_paths=10, max_trials=100, seed=0)
+        # self.gcs.setRoundingStrategy(randomForwardPathSearch, max_paths=10, max_trials=100, seed=0)
+        self.gcs.setRoundingStrategy(randomForwardPathSearch, max_paths=10, max_trials=100)
 
 
     def _read_config(self):
@@ -105,7 +108,7 @@ class GCSPlanner:
         # The objective is to connect the start and the goal configurations with
         # a continuous (η := 0) trajectory of minimum Euclidean length (a := c := 0 and b := 1).
         # Velocity and time constraints are irrelevant given our objective.
-        # It seems that LinearGCS corresponds to this implementation
+        # LinearGCS corresponds to this implementation
         return LinearGCS(regions = self.regions,
                          path_weights = self.cfg["path_weights"],
                          full_dim_overlap = self.cfg["full_dim_overlap"])
@@ -142,13 +145,23 @@ class GCSPlanner:
         run_time += results_dict["relaxation_solver_time"]
         run_time += results_dict["total_rounded_solver_time"] # for comparison with PRM they use "max_rounded_solver_time"
                                                               # because rounding can be parallelized; TODO
-        print("\tRounded cost:", np.round(results_dict["rounded_cost"], 4),
-              "\tRelaxed cost:", np.round(results_dict["relaxation_cost"], 4))
-        print("\tCertified Optimality Gap:",
-              (results_dict["rounded_cost"] - results_dict["relaxation_cost"])
-              / results_dict["relaxation_cost"])
+        rounded_cost = np.round(results_dict["rounded_cost"], 4)
+        relaxed_cost = np.round(results_dict["relaxation_cost"], 4)
+        certified_optimality_gap = (results_dict["rounded_cost"] - results_dict["relaxation_cost"]) / results_dict["relaxation_cost"]
+
+        print("\tRounded cost:", rounded_cost,
+              "\tRelaxed cost:", relaxed_cost)
+        print("\tCertified Optimality Gap:", certified_optimality_gap)
+        print("Run time:", run_time)
         self.gcs.ResetGraph()
-        return traj
+
+        results = {"traj": traj,
+                   "rounded_cost": rounded_cost,
+                   "relaxation_cost": relaxed_cost,
+                   "certified_optimality_gap": certified_optimality_gap,
+                   "run_time": run_time}
+        # return traj
+        return results
 
 if __name__ == '__main__':
     builder = DiagramBuilder()
@@ -164,8 +177,30 @@ if __name__ == '__main__':
     goal_q = np.array([ 0.20, 1.70, -1.45, -0.87, 0.00, 1.40, 0.00, 0.04, 0.04,
                        -0.20, 1.70, 1.45, -0.87, 0.00, 1.40, 1.30, 0.04, 0.04])
     planner.setup(start_q, goal_q)
-    traj = planner.plan()
+
+    # traj = planner.plan()
+    # if planner.cfg["planner_type"] == "LinearGCS":
+    #     traj = make_traj(traj)
+    # visualize_trajectory([traj], True)
+    # time.sleep(100)
+
+    results = planner.plan()
     if planner.cfg["planner_type"] == "LinearGCS":
-        traj = make_traj(traj)
-    visualize_trajectory([traj], True)
-    time.sleep(100)
+        pkl_file_name = "./benchmark_gcs_6.pkl"
+        if not os.path.exists(pkl_file_name):
+            print("Creating pkl file")
+            pkl_dict = {"traj": [],
+                       "rounded_cost": [],
+                       "relaxation_cost": [],
+                       "certified_optimality_gap": [],
+                       "run_time": []}
+            with open(pkl_file_name, "wb") as f:
+                pkl.dump(pkl_dict, f)
+    
+        with open(pkl_file_name, "rb") as f:
+            pkl_dict = pkl.load(f)
+
+        for key in results:
+            pkl_dict[key].append(results[key])
+        with open(pkl_file_name, "wb") as f:
+            pkl.dump(pkl_dict, f)
