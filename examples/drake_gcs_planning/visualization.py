@@ -96,6 +96,12 @@ def visualize_trajectory(traj, draw_ee_path=False, rgb_color = (0, 0, 0, 1)):
             list(map(lambda X: X.translation(), arm_2_X))).T[:]
         meshcat.SetObject("paths/right_arm", arm2_pointcloud, 0.015, rgba=Rgba(*rgb_color))
 
+    camera = np.array([2, 0, 2]).reshape(3, 1)
+    target = np.array([0, 0, 0]).reshape(3, 1)
+    meshcat.SetCameraPose(camera, target)
+    
+    meshcat.SetProperty("/Lights", "position", [2.5, 0, 2.5])
+    
     meshcat_viz.StartRecording()
     simulator.AdvanceTo(end_time)
     meshcat_viz.PublishRecording()
