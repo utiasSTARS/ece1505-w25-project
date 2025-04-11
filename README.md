@@ -5,6 +5,9 @@ This repository contains all the relevant scripts and tools needed to replicate 
 ## Test video
 https://github.com/user-attachments/assets/4d4af3cc-16d1-4cb3-a91b-2ed3b9b5f552
 
+## Test video from drive
+https://drive.google.com/file/d/1ymX_Icdpg31sErBNP93AiMEKiOjI0N0v/view?usp=sharing
+
 ## Installation
 
 This project heavily depends on [Drake](https://drake.mit.edu) and the [Open Motion Planning Library (OMPL)](https://ompl.kavrakilab.org). Follow the steps below to set up and install all necessary dependencies.
