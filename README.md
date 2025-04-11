@@ -3,19 +3,20 @@
 This repository contains all the relevant scripts and tools needed to replicate the findings presented in our final project for the [ECE1505](https://www.comm.utoronto.ca/~weiyu/ece1505/) (Winter 2025) course on convex optimization. The LaTeX files for the project report can be found [here](docs/report/).
 
 ## Results
-https://github.com/user-attachments/assets/4d4af3cc-16d1-4cb3-a91b-2ed3b9b5f552
 
-https://github.com/user-attachments/assets/54cd1f73-277f-49c6-bec4-b8a3ab48aef6
+### GCS vs PRM: minimum-length trajectory
+GSC with 6 vertices        | GSC with 12(18) vertices                                                        | PRM without shortcutting                                                         |  PRM with shortcutting
+:-------------------------:|:--------------------------------------------------------------------------------|:---------------------------------------------------------------------------------|:-------------------------:
+![](figures/linear_6.png)  | ![](figures/linear_12_18.png)                                                   | ![](figures/prm.png)                                                             |  ![](figures/prm_w_shortcutting.png)
+https://github.com/user-attachments/assets/74af149b-9eeb-43c4-aa7c-560e171d6d49 | https://github.com/user-attachments/assets/eef77433-b89f-47aa-a588-93078fb21dd5 | https://github.com/user-attachments/assets/876d743b-ca6b-4405-8fe4-80f741d1be21  |  https://github.com/user-attachments/assets/d112b4ef-ae9f-4637-8274-0ea3b0118139
 
-https://github.com/user-attachments/assets/876d743b-ca6b-4405-8fe4-80f741d1be21
 
-https://github.com/user-attachments/assets/eef77433-b89f-47aa-a588-93078fb21dd5
+### GCS: extension
+Time optmization           | Length optimization                                                             | The energy of the time derivative of the trajectory optimization
+:-------------------------:|:--------------------------------------------------------------------------------|:-------------------------:
+![](figures/bezier_100.png)| ![](figures/bezier_010.png)                                                     | ![](figures/bezier_001.png) 
+https://github.com/user-attachments/assets/0115b37b-0fba-4ef8-aed8-b1e906f8003b | https://github.com/user-attachments/assets/54cd1f73-277f-49c6-bec4-b8a3ab48aef6 | https://github.com/user-attachments/assets/4d4af3cc-16d1-4cb3-a91b-2ed3b9b5f552
 
-https://github.com/user-attachments/assets/d112b4ef-ae9f-4637-8274-0ea3b0118139
-
-https://github.com/user-attachments/assets/74af149b-9eeb-43c4-aa7c-560e171d6d49
-
-https://github.com/user-attachments/assets/0115b37b-0fba-4ef8-aed8-b1e906f8003b
 
 ## Installation
 
