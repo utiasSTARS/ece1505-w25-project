@@ -6,6 +6,7 @@ This repository contains all the relevant scripts and tools needed to replicate 
 <img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="250px" />
 
 ### GCS vs PRM: minimum-length trajectory
+**Note:** the best solutions obtained with GCS using 12 and 18 vertices are identical.
 <table>
   <tr>
     <th>GCS (6 vertices)</th>
