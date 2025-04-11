@@ -3,19 +3,46 @@
 This repository contains all the relevant scripts and tools needed to replicate the findings presented in our final project for the [ECE1505](https://www.comm.utoronto.ca/~weiyu/ece1505/) (Winter 2025) course on convex optimization. The LaTeX files for the project report can be found [here](docs/report/).
 
 ## Results
-
 ### GCS vs PRM: minimum-length trajectory
-GSC with 6 vertices        | GSC with 12(18) vertices                                                        | PRM without shortcutting                                                         |  PRM with shortcutting
-:-------------------------:|:--------------------------------------------------------------------------------|:---------------------------------------------------------------------------------|:-------------------------:
-![](figures/linear_6.png)  | ![](figures/linear_12_18.png)                                                   | ![](figures/prm.png)                                                             |  ![](figures/prm_w_shortcutting.png)
-https://github.com/user-attachments/assets/74af149b-9eeb-43c4-aa7c-560e171d6d49 | https://github.com/user-attachments/assets/eef77433-b89f-47aa-a588-93078fb21dd5 | https://github.com/user-attachments/assets/876d743b-ca6b-4405-8fe4-80f741d1be21  |  https://github.com/user-attachments/assets/d112b4ef-ae9f-4637-8274-0ea3b0118139
-
+<table>
+  <tr>
+    <th>GCS (6 vertices)</th>
+    <th>GCS (12/18 vertices)</th>
+    <th>PRM (no shortcutting)</th>
+    <th>PRM (shortcutting)</th>
+  </tr>
+  <tr>
+    <td><img src="figures/linear_6.png" width="250"/></td>
+    <td><img src="figures/linear_12_18.png" width="250"/></td>
+    <td><img src="figures/prm.png" width="244"/></td>
+    <td><img src="figures/prm_w_shortcutting.png" width="244"/></td>
+  </tr>
+  <tr>
+    <td><img src="figures/linear_6.gif" width="250"/></td>
+    <td><img src="figures/linear_12_18.gif" width="250"/></td>
+    <td><img src="figures/prm.gif" width="244"/></td>
+    <td><img src="figures/prm_w_shortcutting.gif" width="244"/></td>
+  </tr>
+</table>
 
 ### GCS: extension
-Time optmization           | Length optimization                                                             | The energy of the time derivative of the trajectory optimization
-:-------------------------:|:--------------------------------------------------------------------------------|:-------------------------:
-![](figures/bezier_100.png)| ![](figures/bezier_010.png)                                                     | ![](figures/bezier_001.png) 
-https://github.com/user-attachments/assets/0115b37b-0fba-4ef8-aed8-b1e906f8003b | https://github.com/user-attachments/assets/54cd1f73-277f-49c6-bec4-b8a3ab48aef6 | https://github.com/user-attachments/assets/4d4af3cc-16d1-4cb3-a91b-2ed3b9b5f552
+<table>
+  <tr>
+    <th>Time optmization</th>
+    <th>Length optimization</th>
+    <th>The energy of the time derivative of the trajectory optimization</th>
+  </tr>
+  <tr>
+    <td><img src="figures/bezier_100.png" width="300"/></td>
+    <td><img src="figures/bezier_010.png" width="300"/></td>
+    <td><img src="figures/bezier_001.png" width="270"/></td>
+  </tr>
+  <tr>
+    <td><img src="figures/bezier_100.gif" width="300"/></td>
+    <td><img src="figures/bezier_010.gif" width="300"/></td>
+    <td><img src="figures/bezier_001.gif" width="270"/></td>
+  </tr>
+</table>
 
 
 ## Installation
