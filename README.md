@@ -2,6 +2,9 @@
 
 This repository contains all the relevant scripts and tools needed to replicate the findings presented in our final project for the [ECE1505](https://www.comm.utoronto.ca/~weiyu/ece1505/) (Winter 2025) course on convex optimization. The LaTeX files for the project report can be found [here](docs/report/).
 
+## Test video
+https://github.com/user-attachments/assets/4d4af3cc-16d1-4cb3-a91b-2ed3b9b5f552
+
 ## Installation
 
 This project heavily depends on [Drake](https://drake.mit.edu) and the [Open Motion Planning Library (OMPL)](https://ompl.kavrakilab.org). Follow the steps below to set up and install all necessary dependencies.
