@@ -20,27 +20,27 @@ This repository contains all the relevant scripts and tools needed to replicate 
   <tr>
     <td><img src="figures/linear_6.gif" width="250"/></td>
     <td><img src="figures/linear_12_18.gif" width="250"/></td>
-    <td><img src="figures/prm.gif" width="244"/></td>
-    <td><img src="figures/prm_w_shortcutting.gif" width="244"/></td>
+    <td><img src="figures/prm.gif" width="250"/></td>
+    <td><img src="figures/prm_w_shortcutting.gif" width="250"/></td>
   </tr>
 </table>
 
 ### GCS: extension
 <table>
   <tr>
-    <th>Time optmization</th>
-    <th>Length optimization</th>
-    <th>The energy of the time derivative of the trajectory optimization</th>
+    <th width="300px">Time optmization</th>
+    <th width="300px">Length optimization</th>
+    <th width="300px">The energy of the time derivative of the trajectory optimization</th>
   </tr>
   <tr>
-    <td><img src="figures/bezier_100.png" width="300"/></td>
-    <td><img src="figures/bezier_010.png" width="300"/></td>
-    <td><img src="figures/bezier_001.png" width="270"/></td>
+    <th width="300px"><img src="figures/bezier_100.png" width="250"/></th>
+    <th width="300px"><img src="figures/bezier_010.png" width="250"/></th>
+    <th width="300px"><img src="figures/bezier_001.png" width="250"/></th>
   </tr>
   <tr>
-    <td><img src="figures/bezier_100.gif" width="300"/></td>
-    <td><img src="figures/bezier_010.gif" width="300"/></td>
-    <td><img src="figures/bezier_001.gif" width="270"/></td>
+    <th width="300px"><img src="figures/bezier_100.gif" width="250"/></th>
+    <th width="300px"><img src="figures/bezier_010.gif" width="250"/></th>
+    <th width="300px"><img src="figures/bezier_001.gif" width="250"/></th>
   </tr>
 </table>
 
