@@ -4,6 +4,7 @@ This repository contains all the relevant scripts and tools needed to replicate 
 
 ## Results
 <img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="250px" />
+
 ### GCS vs PRM: minimum-length trajectory
 <table>
   <tr>
