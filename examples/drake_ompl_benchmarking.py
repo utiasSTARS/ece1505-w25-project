@@ -30,7 +30,7 @@ PLANNERS = [
 # planning will stop as soon as it found an initial solution
 RUNTIME_LIMIT = 3
 
-RUN_COUNT = 1
+RUN_COUNT = 30
 SHORTCUTTING = True
 PRECOMPUTE = False
 PRECOMPUTATION_TIME = 10
