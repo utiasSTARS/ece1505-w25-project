@@ -103,7 +103,7 @@ STORAGE_PATHS = {
     ),  # 600s precomputed roadmap
 }
 ```
-`SHORTCUTTING` can be turned off to run the vanilla PRM; otherwise, it is enabled by default. We use the recent shortcutting approach proposed in [RRT-Rope](). We also rely on a precomputed PRM roadmap to ensure consistent planning results, which is provided through the `STORAGE_PATHS` parameter. If you want to regenerate the roadmap, set the `PRECOMPUTE` parameter to True. This will generate a new PRM graph in the benchmarks folder—make sure to provide the correct `STORAGE_PATHS` for subsequent runs.
+`SHORTCUTTING` can be turned off to run the vanilla PRM; otherwise, it is enabled by default. We use the recent shortcutting approach proposed in [RRT-Rope](https://ieeexplore.ieee.org/abstract/document/9659071/?casa_token=litbc_-XX08AAAAA:03pWiotQEAXvHXJJBNOk5vNHlFvx1sWlrpQLe3qrlsBA7KdQYo1hQGBqj5sjU-d3hQgnVJBYEw). We also rely on a precomputed PRM roadmap to ensure consistent planning results, which is provided through the `STORAGE_PATHS` parameter. If you want to regenerate the roadmap, set the `PRECOMPUTE` parameter to True. This will generate a new PRM graph in the benchmarks folder—make sure to provide the correct `STORAGE_PATHS` for subsequent runs.
 
 **Caveats**
 
