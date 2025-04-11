@@ -1,6 +1,10 @@
 # Course project for ECE1505 (Winter 2025) on convex optimization
 
+This repository contains all the relevant scripts and tools needed to replicate the findings presented in our final project for the [ECE1505](https://www.comm.utoronto.ca/~weiyu/ece1505/) (Winter 2025) course on convex optimization. The LaTeX files for the project report can be found [here](docs/report/).
+
 ## Installation
+
+This project heavily depends on [Drake](https://drake.mit.edu) and the [Open Motion Planning Library (OMPL)](https://ompl.kavrakilab.org). Follow the steps below to set up and install all necessary dependencies.
 
 **Clone the Repository (including submodules):**
 
@@ -33,21 +37,18 @@ pip install -r requirements.txt
 
 ### Setting up OMPL
 
-This project requires the Python bindings for OMPL. As of this writing, OMPL does not have a PyPI package that can be installed directly via pip. Therefore, it must be installed manually. While there is no official installation method, the following is a recommended approach:
+This project depends on the latest 1.7.0 release of the Open Motion Planning Library (OMPL) and requires its Python bindings. As of this writing, OMPL does not have a PyPI package that can be installed directly via pip. Therefore, it must be installed manually. While there is no official installation method, the following is a recommended approach:
 
-You can install the wheel file directly in your virtual environment. Download the appropriate wheel file from this [link](https://github.com/ompl/ompl/releases/tag/prerelease) based on your system. OMPL is expected to release version 1.7.0 soon, but for now, we will use the 1.6.0 pre-release version.
+You can install the wheel file directly in your virtual environment. Download the appropriate wheel file from this [link](https://github.com/ompl/ompl/releases/tag/1.7.0) based on your system.
 
 Once downloaded, install the wheel using `pip`:
 ```bash
 pip install <wheel-file>.whl
 ```
 
-Note:
-
-If you set up OMPL as described above, you can use most of the planners available in the upstream OMPL repository. However, our benchmarking script also uses [Greedy RRT*](https://arxiv.org/abs/2405.03411v2), a variant of RRTConnect that can find solutions as quickly as RRTConnect but with anytime properties. To use this planner, you need to use [my OMPL fork](https://github.com/mlsdpk/ompl/tree/greedyrrtstar) and build OMPL and its bindings from source.
-
-
 ## Usage
+
+### Teleoperation of Manipulator Joints in Drake
 
 Run the following command in the top-level directory of the repo:
 ```bash
@@ -73,6 +74,8 @@ You can run the following script to benchmark the performance of OMPL planners:
 python examples/drake_ompl_benchmarking.py
 ```
 
+The script will generate .pkl files under the benchmarks folder. You can use them to replicate the results in the report using the provided [notebook](notebooks/plot_statistics.ipynb).
+
 Adjust the following configurations as needed:
 ```py
 ###############################
@@ -80,28 +83,32 @@ Adjust the following configurations as needed:
 ###############################
 
 PLANNERS = [
-    "RRT",
-    "EST",
-    "RRTConnect",
-    "RRTstar",
-    "PRMstar",
-    "FMTstar",
-    "InformedRRTstar",
-    "BITstar",
-    # "GreedyRRTstar",
+    "PRM",  # only PRM is supported at the moment
 ]
 
-RUNTIME_LIMIT = 10
-MEMORY_LIMIT = 4096
-RUN_COUNT = 10
+# this serves as a timeout value
+# planning will stop as soon as it found an initial solution
+RUNTIME_LIMIT = 3
+
+RUN_COUNT = 1
+SHORTCUTTING = True
+PRECOMPUTE = False
+PRECOMPUTATION_TIME = 10
+
+# this is used when PRECOMPUTE is set to False
+
+STORAGE_PATHS = {
+    "PRM": os.path.join(
+        CURRENT_DIR, "../data/PRM-600s.graph"
+    ),  # 600s precomputed roadmap
+}
 ```
+`SHORTCUTTING` can be turned off to run the vanilla PRM; otherwise, it is enabled by default. We use the recent shortcutting approach proposed in [RRT-Rope](). We also rely on a precomputed PRM roadmap to ensure consistent planning results, which is provided through the `STORAGE_PATHS` parameter. If you want to regenerate the roadmap, set the `PRECOMPUTE` parameter to True. This will generate a new PRM graph in the benchmarks folder—make sure to provide the correct `STORAGE_PATHS` for subsequent runs.
 
-This script will generate several files under the benchmarks folder of the project, organized by timestamp. You can use the `.db` file to analyze the results using [Planner Arena](http://plannerarena.org/). More information about the database format and log files can be found [here](https://ompl.kavrakilab.org/benchmark.html). You can also run Planner Arena locally - instructions can be found [here](https://ompl.kavrakilab.org/plannerarena.html).
+**Caveats**
 
-#### Precompute and Reuse Roadmaps
+We have experienced issues when loading the roadmap back into PRM using the OMPL planner's storage functionality. OMPL internally relies on Boost to serialize and deserialize storage data, and we suspect the issue may be due to mismatched Boost versions. This benchmark script has been successfully tested on macOS 15 but not on Ubuntu 22.04.
 
-This feature is not well-documented or widely promoted in OMPL, so not many people are aware of it. Here's a brief explanation of how it works, along with some examples of how to achieve it.
+### Motion Planning with Graph of Convex Sets
 
-TODO (Phone): update this section with more details.
-
-Another related topic is Experience-based Planning. OMPL has older [Thunder](https://ompl.kavrakilab.org/classompl_1_1tools_1_1Thunder.html) and [Lightning](https://ompl.kavrakilab.org/classompl_1_1tools_1_1Lightning.html) frameworks, which use retrieve-and-repair paradigms. We are not using it in this project, so I won’t cover it here — but will come back at some point.
+We also formulate the problem of generating collision-free, kinodynamic motion plans as a mixed-integer convex program using the Graph of Convex Sets (GCS) approach. More information and runnable demos can be found [here](examples/drake_gcs_planning/).
