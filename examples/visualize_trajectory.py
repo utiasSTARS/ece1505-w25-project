@@ -19,23 +19,26 @@ if __name__ == '__main__':
     plant.Finalize()
 
     if TRAJ_TYPE == "PRM":
-        pkl_file_name = "./data/benchmark_prm.pkl"
+        pkl_file_name = "./benchmarks/20250411_002646/benchmark.pkl"
         with open(pkl_file_name, "rb") as f:
             pkl_dict = pkl.load(f)
-        # print(pkl_dict.keys())
         traj = np.array(pkl_dict["solution"]).T
         traj = make_traj(traj)
     elif TRAJ_TYPE == "LinearGCS":
-        pkl_file_name = "./data/benchmark_gcs_18.pkl"
+        pkl_file_name = "./data/benchmark_gcs_12.pkl"
         with open(pkl_file_name, "rb") as f:
             pkl_dict = pkl.load(f)
         rounded_cost = np.array(pkl_dict["rounded_cost"])
         min_cost_idx = np.argmin(rounded_cost)
-        # print(rounded_cost[min_cost_idx], min_cost_idx)
         traj = np.array(pkl_dict["traj"][min_cost_idx])
         traj = make_traj(traj)
     elif TRAJ_TYPE == "BezierGCS":
-        pass
+        pkl_file_name = "./data/benchmark_gcs_6_001.pkl"
+        with open(pkl_file_name, "rb") as f:
+            pkl_dict = pkl.load(f)
+        rounded_cost = np.array(pkl_dict["rounded_cost"])
+        min_cost_idx = np.argmin(rounded_cost)
+        traj = pkl_dict["traj"][min_cost_idx]
 
 
     visualize_trajectory([traj], True)
