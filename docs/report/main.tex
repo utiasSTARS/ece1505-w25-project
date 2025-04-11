@@ -8,6 +8,8 @@
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{booktabs}
 
 % make sure captions are small font
 \usepackage{subcaption}
@@ -30,16 +32,7 @@ Email: \{phone.thiha, karyna.volokhatiuk\}@robotics.utias.utoronto.ca}
 \maketitle
 
 \begin{abstract}
-Motion planning for high-degree-of-freedom robotic manipulators is challenging due to complex constraints such as collision avoidance, kinematic limits, and trajectory smoothness.
-%
-In this project, we propose formulating the motion planning problem for dual-arm manipulation (14-DOF) as a convex optimization problem.
-%
-Specifically, we will leverage the recently studied Graph of Convex Sets (GCS) framework~\cite{marcucci2024shortest} to model motion planning as a compact mixed-integer optimization problem, similar to~\cite{marcucci2023motion}.
-%
-To evaluate its effectiveness, we will compare our approach against classical sampling-based motion planners from OMPL~\cite{sucan2012open}.
-%
-The proposed method will be implemented and tested in Drake~\cite{drake}, a widely used toolbox for modeling and simulating robotic systems.
-{\color{red}todo: rewrite this after all the sections are done}
+Motion planning for high-degree-of-freedom robotic manipulators is inherently challenging due to constraints such as collision avoidance, kinematic limits, and trajectory smoothness. In this project, we propose formulating the motion planning problem as a convex optimization problem. Specifically, we leverage the recently studied Graph of Convex Sets (GCS) framework to model motion planning as a compact mixed-integer program. We also explore an extended formulation that incorporates trajectory duration, length and smoothness using B\'ezier curve parameterizations. Our method is evaluated through simulations on a 18-degree-of-freedom dual-arm manipulation task, and our findings highlight the key trade-offs between solution quality, computational cost, and the complexity of convex region construction in high-dimensional planning problems.
 \end{abstract}
 
 \input{sections/introduction}
@@ -49,5 +42,8 @@ The proposed method will be implemented and tested in Drake~\cite{drake}, a wide
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEabrv,main}
+
+\appendices
+\input{sections/appendix}
 
 \end{document}

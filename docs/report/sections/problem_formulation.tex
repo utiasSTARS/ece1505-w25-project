@@ -1,14 +1,72 @@
-\section{Problem Formulation}
-
-\subsection{Notation}
-All the notations used throughout this report
+\section{Problem Formulation}\label{sec:formulation}
 
 \subsection{Problem statement}
-Formulate our problem here (minimization of path length for example)
+In this project, we formulate two problems. The simpler one involves using convex optimization to generate a trajectory of minimum Euclidean length between the initial and goal manipulator configurations. The more complex task extends this by also optimizing for trajectory duration and smoothness. The first solution will be fairly compared against sampling-based methods, which typically do not optimize for trajectory duration or smoothness. The second solution will be evaluated independently to analyze the effect of different weightings for the various optimization components: trajectory length, duration, and smoothness.
 
 \subsection{IRIS}
-optional, but could provide brief description of IRIS (including some equations) and how we use it
+First, it is important to note that the method we explore—Graph of Convex Sets (GCS)—requires as input a set of overlapping, convex, and collision-free regions (safe regions). To generate these regions, we use IRIS (Iterative Regional Inflation by Semidefinite Programming) \cite{iris}. While the construction of obstacle-free convex sets is itself an interesting topic, it is not the focus of this project; for more details, please refer to the original IRIS paper.
 
-\subsection{Optimization problem}
+In brief, the user specifies a collision-free starting configuration for the robot, and the IRIS algorithm generates a convex polytope of valid configurations that includes this starting point. It is the user's responsibility to choose starting configurations that yield overlapping convex sets sufficient for constructing the desired path.
 
-brief GCS (nodes from IRIS and edges) --- note, we could have separate section for GCS too if it is too long, Mixed-Integer Formulation, final mathematical statement of our optimization problem
+\subsection{Optimization problem: minimum-length trajectory}\label{sec:optimization_problem}
+
+After constructing the safe regions using IRIS, we build a directed graph \( G = (V, E) \). Each vertex \( v \in V \) represents a collision-free convex region \(\mathcal{X}_v\), and a directed edge \( (u, v) \in E \) indicates that the corresponding regions \(\mathcal{X}_u\) and \(\mathcal{X}_v\) overlap (\(u, v \in V\)), allowing a transition from one to the other. Note that if \( (u, v) \in E \), then \( (v, u) \in E \). The length of each edge is variable and depends on two specific robot configurations, \(\mathbf{x}_u\) and \(\mathbf{x}_v\), chosen from the convex sets \(\mathcal{X}_u\) and \(\mathcal{X}_v\) that represent vertices \(U\) and \(V\) associated with the edge. The edge length is defined as the Euclidean distance between these two configurations: \( \| \mathbf{x}_v - \mathbf{x}_u \|_2 \). To enforce boundary conditions, two auxiliary vertices \( s, g \in V \) are introduced, corresponding to the start and goal configurations. For convenience, we set \(\mathcal{X}_s = \{\mathbf{x}_s\}\) and \(\mathcal{X}_g = \{\mathbf{x}_g\}\).
+
+In this problem, we aim to find the minimum-length trajectory between configurations \(\mathbf{x}_s \in \mathcal{X}_s\) and \(\mathbf{x}_g \in \mathcal{X}_g\). For this, we can define a graph path \(p\) from vertex \(s\) to vertex \(g\) as a sequence of distinct vertices \((v_0, \ldots, v_K)\), where \(v_0 = s\) and \(v_K = g\). The corresponding sequence of edges is denoted by \(\mathcal{E}_p := \{ (v_0, v_1), \ldots, (v_{K-1}, v_K) \}\). We denote the set of all possible paths from \(s\) to \(g\) as \(\mathcal{P}\).
+
+The optimization problem can then be formulated as:
+\begin{equation}\label{eq:1}
+\begin{aligned}
+\text{minimize} \quad & \sum_{e = (u,v) \in \mathcal{E}_p} \left\| \mathbf{x}_v - \mathbf{x}_u \right\|_2 \\
+\text{subject to} \quad 
+& p \in \mathcal{P}, \\
+& \mathbf{x}_u \in \mathcal{X}_u, \space \mathbf{x}_v \in \mathcal{X}_v,       & \forall u,v \in p, \\
+& (\mathbf{x}_u, \mathbf{x}_v) \in \mathcal{X}_e, & \forall e = (u,v) \in \mathcal{E}_p.
+\end{aligned}
+\end{equation}
+
+Here, the constraint \((\mathbf{x}_u, \mathbf{x}_v) \in \mathcal{X}_e\) is a convex constraint that couples the endpoints of edge \(e = (u, v)\). For the minimum Euclidean length trajectory problem, we can specify these constraints in the following way: for all edges $e = (u, v) \in \mathcal{E}$, we define $\mathcal{X}_e$ through the conditions \(\mathbf{x}_v \in \mathcal{X}_u \cap \mathcal{X}_v\) for \(\mathbf{x}_u \in \mathcal{X}_u\), \(\mathbf{x}_v \in \mathcal{X}_v\). This ensures that there is a collision-free path between two vertices.
+
+At first glance, the problem in (\ref{eq:1}) may seem simple; however, its complexity lies in the need to not only minimize the total length of the trajectory but also determine which convex regions the path should traverse.
+
+% brief GCS (nodes from IRIS and edges) --- note, we could have separate section for GCS too if it is too long, Mixed-Integer Formulation, final mathematical statement of our optimization problem
+
+\subsection{Mixed-integer convex programming (MICP)}
+\label{MICP_section}
+The problem described in Section~\ref{sec:optimization_problem} can be formulated as mixed integer convex programming (MICP), a problem where certain decision variables are restricted to integers (usually binary), while others can be continuous. This combination leads to a non-convex optimization problem. Therefore, we follow the MICP formulation introduced by Marcucci et al. \cite{marcucci2024shortest}, which is based on the network-flow formulation and becomes convex after the relaxation step:
+\begin{align}
+\text{minimize} \quad & \sum_{e \in \mathcal{E}} \widetilde{\ell}_e(\mathbf{z}_e, \mathbf{z}'_e, y_e) \tag{2.1} \label{eq:2.1}\\
+\text{subject to} \quad 
+& \sum_{e \in \mathcal{E}_s^{\text{out}}} y_e = 1 \quad \sum_{e \in \mathcal{E}_g^{\text{in}}} y_e = 1 \tag{2.2} \\
+& \sum_{e \in \mathcal{E}_v^{\text{out}}} y_e \le 1 \quad \forall v \in {V} \setminus \{s, g\} \tag{2.3} \\
+& \sum_{e \in \mathcal{E}_v^{\text{in}}} (\mathbf{z}'_e, y_e) = \sum_{e \in \mathcal{E}_v^{\text{out}}} (\mathbf{z}_e, y_e) \quad \forall v \in {V} \setminus \{s, g\} \tag{2.4} \label{eq:2.4}\\
+& (\mathbf{z}_e, y_e) \in \widetilde{\mathcal{X}}_u, \quad (\mathbf{z}'_e, y_e) \in \widetilde{\mathcal{X}}_v \quad \forall e = (u, v) \in \mathcal{E} \tag{2.5} \label{eq:2.5} \\
+& y_e \in \{0, 1\} \quad \forall e \in \mathcal{E} \tag{2.6} \label{eq:2.6}
+\end{align}
+
+Here, \(y_e\) are the flows --- decision variables that define if edge \(e\) is traversed by the path (if \(y_e=1\), then is traversed). Other decision variables are $\mathbf{z}_e = y_e \mathbf{x}_u$ and $\mathbf{z}'_e = y_e \mathbf{x}_v$, where $e$ is an edge $e = (u,v)$; they represent the flow-weighted configuration of the vertex 
+(either \(\mathbf{x}_u \in \mathcal{X}_u\), or \(\mathbf{x}_v \in \mathcal{X}_v\); \(u, v \in V\)) at one end of the edge.
+
+The objective function (\ref{eq:2.1}) is a sum of perspective functions, which are based on the edge length. If we introduce a function \({\ell_e}\) as \(\| \mathbf{x}_v - \mathbf{x}_u \|_2\) when \((\mathbf{x}_u, \mathbf{x}_v) \in \mathcal{X}_e\) and \(\inf\) otherwise, the perspective function can be defined as:
+
+\[
+\tilde{\ell}_e(\mathbf{z}_e, \mathbf{z}'_e, y_e) =
+\begin{cases}
+\ell_e(\mathbf{x}_u, \mathbf{x}_v) y_e & \text{if } y_e > 0, \\
+
+0, & \text{otherwise}.
+\end{cases}
+\]
+
+The sets $\mathcal{E}_v^{\mathrm{in}} := \{(u, v) \in \mathcal{E}\}$ and $\mathcal{E}_v^{\mathrm{out}} := \{(v, u) \in \mathcal{E}\}$ represent the sets of edges incoming to and outgoing from vertex $v$, respectively. \(\tilde{\mathcal{X}}_u\) and \(\tilde{\mathcal{X}}_v\) are perspective cones of the convex sets $\mathcal{X}_u$ and $\mathcal{X}_v$, respectively. Constraints in \ref{eq:2.5} ensure that if $y_e = 1$ (edge $e$ is part of the selected path), then $z_e = x_u \in \mathcal{X}_u$ and $z_e' = x_v \in \mathcal{X}_v$; and if $y_e = 0$, then $z_e = z_e' = 0$. The purpose of these cones is to switch on/off vertex participation in the path without breaking convexity. Finally, \ref{eq:2.4} ensures flow conservation.
+
+To achieve convexity, Marcucci et al.~\cite{marcucci2024shortest} relax the binary constraints in (\ref{eq:2.6}), allowing \( y_e \in [0, 1] \). This relaxed variable can be interpreted as the probability of edge \( e \) being included in the shortest path~\cite{marcucci2023motion}. The resulting formulation is a Second-Order Cone Program (SOCP).
+
+Finally, to get an approximate solution, \cite{marcucci2023motion} proposes to round probabilities using a randomized depth-first search with backtracking (see Section 4.2 in \cite{marcucci2023motion} for details). After this step we can also calculate an (overestimated) optimality gap of the rounded solution: \( \delta_{\text{relax}} = (C_\text{round} - C_\text{relax}) / C_{\text{relax}} \).
+
+\subsection{Extension of the optimization problem}
+Due to space constraints and the increased complexity arising from optimizing not only Euclidean distance but also time and smoothness, we will briefly outline the core ideas behind the formulation proposed in \cite{marcucci2023motion}.
+
+To enable this richer optimization, each trajectory is parameterized using two B\'ezier curves. Previously, a configuration variable \(\mathbf{x}_v \in \mathcal{X}_v\) was associated with each vertex \(v \in V\); now, each such variable corresponds to the set of control points for two B\'ezier curves. One curve represents the path (spatial component), while the other represents the time-scaling function.
+
+The objective function is expressed as a weighted sum of three terms: the trajectory duration, its length, and the energy of the time derivative of the trajectory. The energy term promotes trajectory smoothness. Additional constraints are introduced to enforce a desired degree of differentiability, as well as to bound the total duration. Despite the increased number of constraints and the more complex objective, the Mixed-Integer Convex Programming (MICP) framework described in Section~\ref{MICP_section} remains applicable. For a detailed discussion of the full formulation and solution approach, see~\cite{marcucci2023motion}.
