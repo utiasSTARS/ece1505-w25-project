@@ -3,6 +3,7 @@
 This repository contains all the relevant scripts and tools needed to replicate the findings presented in our final project for the [ECE1505](https://www.comm.utoronto.ca/~weiyu/ece1505/) (Winter 2025) course on convex optimization. The LaTeX files for the project report can be found [here](docs/report/).
 
 ## Results
+<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="250px" />
 ### GCS vs PRM: minimum-length trajectory
 <table>
   <tr>
