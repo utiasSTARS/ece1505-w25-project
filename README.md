@@ -29,6 +29,7 @@ This repository contains all the relevant scripts and tools needed to replicate 
 </table>
 
 ### GCS: extension
+**Note:** A graph with 6 vertices was used in these experiments.
 <table>
   <tr>
     <th width="300px">Time optmization</th>
