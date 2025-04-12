@@ -10,14 +10,14 @@
     \centering
     \begin{subfigure}[b]{0.19\textwidth}
         \centering
-        \fbox{\includegraphics[width=\textwidth]{figures/cage_start_orbit.png}}
+        \fbox{\includegraphics[width=\textwidth]{figures/start.png}}
         \captionsetup{justification=centering}
         \caption{Start configuration}
         \label{subfig:cage_start_orbit}
     \end{subfigure}\hspace{0.01\textwidth}
     \begin{subfigure}[b]{0.19\textwidth}
         \centering
-        \fbox{\includegraphics[width=\textwidth]{figures/cage_goal_orbit.png}}
+        \fbox{\includegraphics[width=\textwidth]{figures/goal.png}}
         \captionsetup{justification=centering}
         \caption{Goal configuration}
         \label{subfig:cage_goal_orbit}
@@ -37,7 +37,7 @@ The environment we designed resembles a cage, where the robot's task is to move 
 We purposefully constructed this setup to ensure that narrow passages appear in the high-dimensional configuration space of the robot, a known challenge for classical motion planners.
 All aspects of the robot's geometry, kinematics and collisions were modeled using Drake's built in simulation and collision checking engines.
 
-In addition to our approach, we use sampling-based motion planners from the Open Motion Planning Library (OMPL)~\cite{sucan2012open}\footnote{We used the latest release version 1.7.0 of OMPL for all the experiments.} as benchmarks for comparison. All parameters related to these sampling-based planners were carefully reviewed and adjusted only when necessary to ensure a fair comparison. Due to space constraints, detailed configurations are omitted from this report, and interested readers can refer to our publicly available repository for more information.\footnote{\url{https://github.com/utiasSTARS/ece1505-w25-project}}.{\color{red}we should probably move this repo to our own}
+In addition to our approach, we use sampling-based motion planners from the Open Motion Planning Library (OMPL)~\cite{sucan2012open}\footnote{We used the latest release version 1.7.0 of OMPL for all the experiments.} as benchmarks for comparison. All parameters related to these sampling-based planners were carefully reviewed and adjusted only when necessary to ensure a fair comparison. Due to space constraints, detailed configurations are omitted from this report, and interested readers can refer to our publicly available repository for more information.\footnote{\url{https://github.com/utiasSTARS/ece1505-w25-project}}
 
 % \begin{table}[t]
 % \centering
@@ -87,7 +87,7 @@ Optimality gap (average)      & 0.0000 & 0.0043 & 0.1673 \\
 \end{table}
 
 \subsection{Analysis of the minimum-length trajectory problem}
-We tested a version of GCS that minimizes the Euclidean length of the trajectory on graphs of three different sizes: $6$, $12$, and $18$ vertices (see Appendix~\ref{IRIS_details} for more details). Each larger graph contains all the vertices of the smaller ones, along with additional vertices. While it may seem counterintuitive, a larger graph—with more possible configurations—does not necessarily lead to a better (i.e., lower) objective value. For the smallest graph, the feasible objective value after the rounding step is $8.76$; for the medium graph, it is $8.14$; and for the largest, it is $8.66$ (see Table~\ref{table_1}) .
+We tested a version of GCS that minimizes the Euclidean length of the trajectory on graphs of three different sizes: $6$, $12$, and $18$ vertices (see Appendix~\ref{IRIS_details} for more details). Each larger graph contains all the vertices of the smaller ones, along with additional vertices. While it may seem counterintuitive, a larger graph—with more possible configurations—does not necessarily lead to a better (i.e., lower) objective value. For the smallest graph, the feasible objective value after the rounding step is $8.76$; for the medium graph, it is $8.14$; and for the largest, it is $8.14$ (see Table~\ref{table_1}) .
 
 This discrepancy arises from the relaxation used in the problem formulation and the need to apply a rounding step to convert the relaxed solution into a feasible one. Since we employed a randomized rounding method (specifically, a randomized depth-first search with backtracking), we conducted $30$ experiments for each graph size to evaluate performance. To interpret the table results correctly, it is important to note that the optimality gap is evaluated only with respect to the chosen convex sets. Thus, zero optimality gap only means that the solution is optimal with respect to the given graph. For example, although the optimality gap for the smallest graph appears to be zero, the true optimal cost may actually be lower than the obtained solution, since the IRIS convex sets only approximate the full solution space.
 
@@ -128,42 +128,21 @@ Additionally, it is important to note that increasing the graph size leads to a 
 
 \subsection{Comparison with sampling-based planners}\label{sec:sampling-based}
 
-We also conducted experiments to compare our approach with sampling-based methods, which are standard algorithms used in many high-dimensional motion planning applications. The most suitable candidate for benchmarking against ours is the multi-query sampling-based planner, PRM, as it supports precomputation---these planners build a roadmap (graph) prior to planning to accelerate the solution search. Additionally, we applied path shortcutting techniques to the solution paths found by PRM to improve path quality, with some tradeoff in execution time. Specifically, we used the path shortening method proposed in the work of RRT-Rope~\cite{petit2021rrt}. Each algorithm was run for $30$ trials, and we measured the median solution quality (in terms of path length) and computation time. The results are presented in Figure~\ref{fig:exp-b}. Here, PRM-S denotes PRM with path shortcutting enabled, while GCS-6, GCS-12, and GCS-18 represent our approach using small, medium, and large convex set sizes of $6$, $12$, and $18$, respectively.
+We also conducted experiments to compare our approach with sampling-based methods, which are standard algorithms used in many high-dimensional motion planning applications. The most suitable candidate for benchmarking against ours is the multi-query sampling-based planner, PRM, as it supports precomputation---these planners build a roadmap (graph) prior to planning to accelerate the solution search. Additionally, we applied path shortcutting techniques to the solution paths found by PRM to improve path quality, with some tradeoff in execution time. Specifically, we used the path shortening method proposed in the work of RRT-Rope~\cite{petit2021rrt}. Each algorithm was run for $30$ trials, and we measured the average solution quality (in terms of path length) and computation time. The results are presented in Figure~\ref{fig:exp-b}. Here, PRM-S denotes PRM with path shortcutting enabled, while GCS-6, GCS-12, and GCS-18 represent our approach using small, medium, and large convex set sizes of $6$, $12$, and $18$, respectively.
 
-In terms of solution quality, we observed that PRM performs the worst among all tested algorithms. This result is also expected, given the known limitations of random sampling-based methods. In contrast, PRM-S and all GCS variants with different set sizes produce comparable solution qualities. Notably, PRM-S achieves the best solution cost among the tested methods, including ours. This represents a significant improvement over the results presented in~\cite{marcucci2023motion}, and demonstrates that our convex optimization-based approach can still compete with state-of-the-art path shortening techniques in terms of solution quality. We also observed that GCS-12 outperforms the other two GCS variants, raising an important question about how to design these collision-free sets and determine their optimal number to strike a balance between performance and computation requirements.
+In terms of solution quality, we observed that PRM performs the worst among all tested algorithms. This result is also expected, given the known limitations of random sampling-based methods. In contrast, PRM-S and all GCS variants with different set sizes produce comparable solution qualities. Notably, PRM-S achieves the best solution cost among the tested methods, including ours. These PRM-S results are significantly better than the results presented in~\cite{marcucci2023motion}, and demonstrate that our convex optimization-based approach can still compete with state-of-the-art path shortening techniques in terms of solution quality. We also observed that GCS-12 outperforms the other two GCS variants.
 
 On the other hand, PRM found solutions fastest, with an average computation time of approximately $140$ ms, followed by PRM-S at $350$ ms and GCS-6 at $520$ ms. GCS-12 and GCS-18 took significantly longer, requiring between $9.89$ and $33.64$ seconds to find a solution. These results highlight the importance of selecting an appropriate number and size of convex sets to effectively trade off between solution quality and execution time.
 
 \subsection{Analysis of the extension of the problem}
-First, it is important to note that the extended version of Graph-Constrained Search (GCS) runs slower than the version that only optimizes trajectory length. For a graph with six vertices, the extended version is approximately twice as slow. This is due to the use of Bézier curves, which increase the number of configurations optimized at each vertex.
+First, it is important to note that the extended version of GCS runs slower than the version that only optimizes trajectory length. For a graph with six vertices, the extended version is approximately twice as slow. This is due to the use of B\'ezier curves, which increase the number of configurations optimized at each vertex.
 
-However, this extension provides capabilities not available in traditional sampling-based methods: it allows for control over the smoothness, differentiability, and time optimality of the trajectory. The extended optimization problem introduces three tunable weights: (a) trajectory duration, (b) trajectory length, and (c) the energy of the time derivative of the trajectory. In addition, it is possible to enforce a constraint on the required degree of trajectory differentiability.
+However, this extension provides capabilities not available in traditional geometric sampling-based methods: it allows for control over the smoothness, differentiability, and time optimality of the trajectory. The extended optimization problem introduces three tunable weights: (a) trajectory duration, (b) trajectory length, and (c) the energy of the time derivative of the trajectory. In addition, it is possible to enforce a constraint on the required degree of trajectory differentiability.
 
-We experimented with different combinations of the weights \( a \), \( b \), and \( c \), while ensuring the resulting trajectory was continuously differentiable (once). Although the optimization occurs in configuration space, the resulting end-effector trajectories, that we visualize, exhibit clear differences depending on the chosen weights.
+We experimented with different combinations of the weights for (a), (b), and (c), while ensuring the resulting trajectory was continuously differentiable (once):
 
-\begin{itemize}
-    \item Prioritizing \( a \) results in a high-velocity trajectory with minimal sharp turns.
-    \item Prioritizing \( b \) yields a shorter trajectory with sharper direction changes, making it more difficult to follow quickly.
-    \item Prioritizing \( c \) produces a very smooth but slower trajectory.
+\begin{itemize}[leftmargin=*]
+    \item Prioritizing (a) results in a high-velocity trajectory with minimal sharp turns.
+    \item Prioritizing (b) yields a shorter trajectory with sharper direction changes, making it more difficult to follow quickly.
+    \item Prioritizing (c) produces a very smooth but slower trajectory.
 \end{itemize}
-
-% \begin{table}[t]
-% \centering
-% \caption{Summary of GCS results for different weights.}
-% \label{table_2}
-% \begin{tabular}{ccc}
-% \toprule
-% \textbf{a} & \textbf{b} & \textbf{c} \\
-% \midrule
-% 1 & 0 & 0 \\
-% 0 & 1 & 0 \\
-% 0 & 0 & 1 \\
-% \midrule
-% 1 & 1 & 0 \\
-% 1 & 0 & 1 \\
-% 0 & 1 & 1 \\
-% \midrule
-% 1 & 1 & 1 \\
-% \bottomrule
-% \end{tabular}
-% \end{table}

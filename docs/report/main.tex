@@ -10,6 +10,7 @@
 \usepackage{hyperref}
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{enumitem}
 
 % make sure captions are small font
 \usepackage{subcaption}
@@ -24,15 +25,15 @@
 
 \title{Mixed-Integer Convex Programming for \\Motion Planning in Dual-Arm Manipulation}
 
-\author{\IEEEauthorblockN{Phone Thiha Kyaw and Karyna Volokhatiuk}
+\author{\IEEEauthorblockN{Karyna Volokhatiuk and Phone Thiha Kyaw}
 \IEEEauthorblockA{\textit{University of Toronto Institute for Aerospace Studies} \\
-Email: \{phone.thiha, karyna.volokhatiuk\}@robotics.utias.utoronto.ca}
+Email: \{karyna.volokhatiuk, phone.thiha\}@robotics.utias.utoronto.ca}
 }
 
 \maketitle
 
 \begin{abstract}
-Motion planning for high-degree-of-freedom robotic manipulators is inherently challenging due to constraints such as collision avoidance, kinematic limits, and trajectory smoothness. In this project, we propose formulating the motion planning problem as a convex optimization problem. Specifically, we leverage the recently studied Graph of Convex Sets (GCS) framework to model motion planning as a compact mixed-integer program. We also explore an extended formulation that incorporates trajectory duration, length and smoothness using B\'ezier curve parameterizations. Our method is evaluated through simulations on a 18-degree-of-freedom dual-arm manipulation task, and our findings highlight the key trade-offs between solution quality, computational cost, and the complexity of convex region construction in high-dimensional planning problems.
+Motion planning for high-degree-of-freedom robotic manipulators is inherently challenging due to constraints such as collision avoidance, kinematic limits, and trajectory smoothness. In this project, we propose formulating the motion planning problem as a convex optimization problem. Specifically, we leverage the recently studied Graph of Convex Sets (GCS) framework to model motion planning as a compact mixed-integer program. We also explore an extended formulation that incorporates trajectory duration, length and smoothness using B\'ezier curve parameterizations. Our method is evaluated through simulations on a 18-degree-of-freedom dual-arm manipulation task, and our findings highlight the key trade-offs between solution quality, computational cost, and the complexity of convex region construction in high-dimensional planning problems. All code and visualizations supporting our results are publicly available at: \href{https://github.com/utiasSTARS/ece1505-w25-project}{\texttt{github.com/utiasSTARS/ece1505-w25-project}}.
 \end{abstract}
 
 \input{sections/introduction}

@@ -18,31 +18,18 @@ By leveraging convex relaxations and mixed-integer programming, GCS provides a s
 
 \begin{figure}[!t]
     \centering
-    \begin{subfigure}[b]{0.19\textwidth}
-        \centering
-        \fbox{\includegraphics[width=\textwidth]{figures/cage_start_orbit.png}}
-        \captionsetup{justification=centering}
-        \caption{Start configuration}
-        \label{subfig:cage_start_orbit}
-    \end{subfigure}\hspace{0.01\textwidth}
-    \begin{subfigure}[b]{0.19\textwidth}
-        \centering
-        \fbox{\includegraphics[width=\textwidth]{figures/cage_goal_orbit.png}}
-        \captionsetup{justification=centering}
-        \caption{Goal configuration}
-        \label{subfig:cage_goal_orbit}
-    \end{subfigure}
-    \caption{A dual-arm manipulation problem for two Franka Emika Panda robots in {\color{red}$\mathbb{R}^{18}$}, simulated in Drake. The robots start in an initial configuration (a) positioned between the first two rows of obstacles and must reach the goal configuration (b) between the last two rows of obstacles without collisions. {\color{red}should replace this with the solution trajectory of the arm, move this to experiments section}}
-    \label{fig:simulation}
+    \includegraphics[width=0.99\linewidth]{figures/gcs_solution_trajectory_hd.jpg}
+    \caption{A composite figure of two Franka Emika Panda robots executing a path found by our proposed convex optimization-based motion planning approach.}
+    \label{fig:gcs_solution}
 \end{figure}
 
 \subsection{Contributions}
-In this project, we explore the use of GCS framework for kinodynamic motion planning in dual-arm robotic manipulation. Our key contributions are as follows:
+In this project, we explore the use of GCS framework for kinodynamic motion planning in dual-arm robotic manipulation (Figure~\ref{fig:gcs_solution}). Our key contributions are as follows:
 
 \begin{itemize}
 \item We formulate the problem of generating \textit{collision-free, kinodynamic motion plans} for a dual-arm manipulator as a mixed-integer convex program (MICP), following the approach in~\cite{marcucci2023motion}. However, unlike prior work, we investigate the scalability of the GCS framework in significantly higher-dimensional settings---specifically, an 18-degree-of-freedom (DOF) dual-arm system operating in a more complex, cluttered environment with narrow passages.
  
-\item We conduct a comprehensive experimental study to evaluate the effectiveness of our optimization-based motion planning approach. Our experiments also include comparisons against recent sampling-based algorithms, analyzing critical performance metrics such as solution quality and computation time.
+\item We conduct a comprehensive experimental study to evaluate the effectiveness of the optimization-based motion planning approach. Our experiments also include comparisons against recent sampling-based algorithms, analyzing critical performance metrics such as solution quality and computation time.
 \end{itemize} 
 
 This report is organized as follows: Section~\ref{sec:formulation} presents the problem formulation of our proposed approach. Section~\ref{sec:results} discusses and analyzes the results from our simulation studies. Finally, Section~\ref{sec:conclusion} concludes the report.
