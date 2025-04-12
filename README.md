@@ -6,7 +6,10 @@ This repository contains all the relevant scripts and tools needed to replicate 
 <img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="250px" />
 
 ### GCS vs PRM: minimum-length trajectory
-**Note:** the best solutions obtained with GCS using 12 and 18 vertices are identical.
+**Notes:**
+- The best solutions obtained using GCS with 12 and 18 vertices are identical.
+- Since both GCS (in these experiments) and PRM aim to find the shortest path, all resulting trajectories are traversed at a constant velocity.
+
 <table>
   <tr>
     <th>GCS (6 vertices)</th>
@@ -82,7 +85,7 @@ Main python dependencies:
 pip install -r requirements.txt
 ```
 
-Navigate to the `./external/gcs` directory and install the dependencies by running:
+Navigate to the `./external/gcs` directory and install gcs dependencies by running:
 ```bash
 pip install -r requirements.txt
 ```
