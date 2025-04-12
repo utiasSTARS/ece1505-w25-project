@@ -82,6 +82,16 @@ Main python dependencies:
 pip install -r requirements.txt
 ```
 
+Navigate to the `./external/gcs` directory and install the dependencies by running:
+```bash
+pip install -r requirements.txt
+```
+**Note:** to successfully run our examples, you'll need to modify one line in the file `./external/gcs/gcs/linear.py`. Specifically, remove the `[1]` indexing from:
+```bash
+edge_length = edge.AddCost(Binding[Cost](
+    self.edge_cost, np.append(u.x(), v.x())))[1]
+```
+
 ### Setting up OMPL
 
 This project depends on the latest 1.7.0 release of the Open Motion Planning Library (OMPL) and requires its Python bindings. As of this writing, OMPL does not have a PyPI package that can be installed directly via pip. Therefore, it must be installed manually. While there is no official installation method, the following is a recommended approach:
